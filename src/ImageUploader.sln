@@ -3,17 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29025.244
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageUploader.Host", "ImageUploader\ImageUploader.Host.csproj", "{0D03C1C8-3DA2-4A59-AC2A-8A591B74426F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageUploader.Application.Contract", "ImageUploader.Application.Contract\ImageUploader.Application.Contract.csproj", "{947F9949-BB58-4214-9C1B-4EC9F6AE8699}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageUploader.Application.Contract", "ImageUploader.Application.Contract\ImageUploader.Application.Contract.csproj", "{947F9949-BB58-4214-9C1B-4EC9F6AE8699}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageUploader.Application", "ImageUploader.Application\ImageUploader.Application.csproj", "{4F9C63C4-2832-4F1C-A188-CCBDD16525D6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageUploader.Application", "ImageUploader.Application\ImageUploader.Application.csproj", "{4F9C63C4-2832-4F1C-A188-CCBDD16525D6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageUploader.Persistence", "ImageUploader.Persistence\ImageUploader.Persistence.csproj", "{47749BA6-145A-45F4-993D-763BAA2B0398}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageUploader.Persistence", "ImageUploader.Persistence\ImageUploader.Persistence.csproj", "{47749BA6-145A-45F4-993D-763BAA2B0398}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageUploader.Persistence.Contract", "ImageUploader.Persistence.Contract\ImageUploader.Persistence.Contract.csproj", "{190DE95C-95F9-4BFB-BBFD-FDA8111F53DD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageUploader.Persistence.Contract", "ImageUploader.Persistence.Contract\ImageUploader.Persistence.Contract.csproj", "{190DE95C-95F9-4BFB-BBFD-FDA8111F53DD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageUploader.Controllers", "ImageUploader.Controllers\ImageUploader.Controllers.csproj", "{37B6D1B9-6072-4454-9752-9C35052AA13F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageUploader.Controllers", "ImageUploader.Controllers\ImageUploader.Controllers.csproj", "{37B6D1B9-6072-4454-9752-9C35052AA13F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageUploader.Host", "ImageUploader.Host\ImageUploader.Host.csproj", "{D8B68C1E-A7AD-41C8-9CE5-9BD432948C86}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,10 +21,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{0D03C1C8-3DA2-4A59-AC2A-8A591B74426F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0D03C1C8-3DA2-4A59-AC2A-8A591B74426F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0D03C1C8-3DA2-4A59-AC2A-8A591B74426F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0D03C1C8-3DA2-4A59-AC2A-8A591B74426F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{947F9949-BB58-4214-9C1B-4EC9F6AE8699}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{947F9949-BB58-4214-9C1B-4EC9F6AE8699}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{947F9949-BB58-4214-9C1B-4EC9F6AE8699}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -45,6 +41,10 @@ Global
 		{37B6D1B9-6072-4454-9752-9C35052AA13F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{37B6D1B9-6072-4454-9752-9C35052AA13F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{37B6D1B9-6072-4454-9752-9C35052AA13F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D8B68C1E-A7AD-41C8-9CE5-9BD432948C86}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D8B68C1E-A7AD-41C8-9CE5-9BD432948C86}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D8B68C1E-A7AD-41C8-9CE5-9BD432948C86}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D8B68C1E-A7AD-41C8-9CE5-9BD432948C86}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
