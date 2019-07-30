@@ -12,4 +12,10 @@
     <ProjectReference Include="..\ImageUploader.Application.Contract\ImageUploader.Application.Contract.csproj" />
   </ItemGroup>
 
+  <PropertyGroup>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningsAsErrors />
+    <NoWarn />
+  </PropertyGroup>
+  
 </Project>

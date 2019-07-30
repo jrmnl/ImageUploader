@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -8,4 +8,10 @@
     <ProjectReference Include="..\ImageUploader.Persistence.Contract\ImageUploader.Persistence.Contract.csproj" />
   </ItemGroup>
 
+  <PropertyGroup>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningsAsErrors />
+    <NoWarn />
+  </PropertyGroup>
+  
 </Project>
