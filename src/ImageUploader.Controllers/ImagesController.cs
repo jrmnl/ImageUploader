@@ -81,7 +81,7 @@ namespace ImageUploader.Controllers
                     }
                     catch (InvalidImageException)
                     {
-                        return UnprocessableEntity($"Item #{i}: invalid image type");
+                        return InvalidImageType(i);
                     }
                 }
             }
@@ -101,7 +101,7 @@ namespace ImageUploader.Controllers
                 }
                 catch (InvalidImageException)
                 {
-                    return UnprocessableEntity($"Item #{i} '{urls[i]}': invalid image type");
+                    return InvalidImageType(i, urls[i]);
                 }
                 catch (ResourceNotFoundException)
                 {
@@ -109,6 +109,16 @@ namespace ImageUploader.Controllers
                 }
             }
             return Ok(ids);
+        }
+
+        private IActionResult InvalidImageType(int itemIndex)
+        {
+            return UnprocessableEntity($"Item #{itemIndex}: invalid image type");
+        }
+
+        private IActionResult InvalidImageType(int itemIndex, string url)
+        {
+            return UnprocessableEntity($"Item #{itemIndex} - '{url}': invalid image type");
         }
 
         private IActionResult UploadByEncodedImages(IReadOnlyList<string> encodedImages)
@@ -123,7 +133,7 @@ namespace ImageUploader.Controllers
                 }
                 catch (InvalidImageException)
                 {
-                    return UnprocessableEntity($"Item #{i}: invalid image type");
+                    return InvalidImageType(i);
                 }
             }
             return Ok(ids);
