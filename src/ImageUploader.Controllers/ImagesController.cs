@@ -62,17 +62,17 @@ namespace ImageUploader.Controllers
         }
 
         [HttpPost("content")]
-        public IActionResult Post([FromForm]IReadOnlyList<IFormFile> files)
+        public IActionResult Post([FromForm]IReadOnlyList<IFormFile> images)
         {
-            if (files is null) return BadRequest();
-            if (!files.All(file => file.ContentType == "image/jpeg"))
+            if (images is null) return BadRequest();
+            if (!images.All(file => file.ContentType == "image/jpeg"))
                 return BadRequest("Only 'image/jpeg' supported");
 
             var ids = new List<Guid>();
-            for (int i = 0; i < files.Count; i++)
+            for (int i = 0; i < images.Count; i++)
             {
-                var a = files[i].ContentType;
-                using (var stream = files[i].OpenReadStream())
+                var a = images[i].ContentType;
+                using (var stream = images[i].OpenReadStream())
                 {
                     try
                     {
