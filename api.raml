@@ -1,0 +1,63 @@
+#%RAML 1.0
+title: Image Uploader
+baseUri: /api
+types:
+  Image:
+    type: file
+    fileTypes: ['image/jpeg']
+  UploadByUrls:
+    type: object
+    properties:
+      urls: string[]
+  UploadByBase64:
+    type: object
+    properties:
+      encodedImages:
+        type: string[]
+        description:
+          Images encoded by base 64 string
+
+/images:
+  post:
+    body:
+      application/json:
+        type: UploadByUrls | UploadByBase64
+        required: true
+        example: { "urls": [ "https://github.com", "https://www.google.ru/"] }
+    responses:
+      200:
+        body:
+          type: string[]
+          description:
+            Image identifiers
+  /{imageId}:
+    uriParameters:
+      userId:
+        type: string
+    get:
+      200:
+        responses:
+          image/jpeg:
+            type: Image
+      404:
+    /thumbnail:
+      get:
+        200:
+          responses:
+            image/jpeg:
+              type: Image
+        404:
+  /content:
+    post:
+      body:
+        multipart/form-data:
+          properties:
+            images:
+              type: Image[]
+              required: true
+      responses:
+        200:
+          body:
+            type: string[]
+            description:
+              Image identifiers
