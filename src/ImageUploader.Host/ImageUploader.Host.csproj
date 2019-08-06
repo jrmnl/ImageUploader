@@ -18,8 +18,6 @@
     <ProjectReference Include="..\ImageUploader.Application.Contract\ImageUploader.Application.Contract.csproj" />
     <ProjectReference Include="..\ImageUploader.Application\ImageUploader.Application.csproj" />
     <ProjectReference Include="..\ImageUploader.Controllers\ImageUploader.Controllers.csproj" />
-    <ProjectReference Include="..\ImageUploader.Persistence.Contract\ImageUploader.Persistence.Contract.csproj" />
-    <ProjectReference Include="..\ImageUploader.Persistence\ImageUploader.Persistence.csproj" />
   </ItemGroup>
 
 </Project>

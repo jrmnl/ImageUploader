@@ -16,7 +16,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ImageUploader.Application.Contract\ImageUploader.Application.Contract.csproj" />
-    <ProjectReference Include="..\ImageUploader.Persistence.Contract\ImageUploader.Persistence.Contract.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,49 +1,88 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using ImageUploader.Application.Contract;
-using ImageUploader.Persistence.Contract;
 
 namespace ImageUploader.Application
 {
-    public class ImageUploadService : IImageUploader
+    public class ImagesService : IImagesService
     {
-        private readonly IImageStorage _storage;
+        private readonly string _path;
+        private readonly HttpClient _client;
 
-        public ImageUploadService(IImageStorage storage)
+        public ImagesService(string path, HttpClient client)
         {
-            _storage = storage ?? throw new ArgumentNullException(nameof(storage));
+            if (path is null) throw new ArgumentNullException(nameof(path));
+            if (!Directory.Exists(path)) throw new ArgumentException($"Directory '{path}' doesn't exist");
+
+            _path = path;
+            _client = client ?? throw new ArgumentNullException(nameof(client));
         }
 
-        public async Task UploadByBase64(IEnumerable<string> base64images)
+        public Stream Get(Guid id)
         {
-            var images = base64images.Select(Convert.FromBase64String);
+            var name = CreateName(id);
+            return OpenRead(name);
+        }
 
-            foreach (var imageBytes in images)
+        public Stream GetThumbnail(Guid id)
+        {
+            var name = CreateThumbnailName(id);
+            return OpenRead(name);
+        }
+
+        public Guid Upload(string encodedImage)
+        {
+            var image = Convert.FromBase64String(encodedImage);
+
+            using (var stream = new MemoryStream(image))
             {
-                using (var stream = new MemoryStream(imageBytes))
+                return Upload(stream);
+            }
+        }
+
+        public Guid Upload(Stream stream)
+        {
+            var id = Guid.NewGuid();
+
+            using (var image = Image.FromStream(stream))
+            {
+                var name = CreateName(id);
+                Save(name, image);
+
+                using (var thumbnail = image.GetThumbnailImage(100, 100, () => false, IntPtr.Zero))
                 {
-                    var image = Image.FromStream(stream);
-                    var randomName = Guid.NewGuid().ToString("D");
-                    await Save($"{randomName}.jpg", image);
-                    var thumbnail = image.GetThumbnailImage(100, 100, () => false, IntPtr.Zero);
-                    await Save($"{randomName}_thumb.jpg", thumbnail);
+                    var thumbName = CreateThumbnailName(id);
+                    Save(thumbName, thumbnail);
                 }
             }
+
+            return id;
         }
 
-        private async Task Save(string name, Image image)
+        public async Task<Guid> UploadFrom(string uri)
         {
-            using (var stream = new MemoryStream())
+            using (var streamImage = await _client.GetStreamAsync(uri))
             {
-                image.Save(stream, ImageFormat.Jpeg);
-                stream.Seek(0, SeekOrigin.Begin);
-                await _storage.Save(name, stream);
+                return Upload(streamImage);
             }
         }
+
+        private Stream OpenRead(string name) => File.OpenRead(Path.Combine(_path, name));
+
+        private void Save(string name, Image image)
+        {
+            using (var fileStream = File.Create(Path.Combine(_path, name)))
+            {
+                image.Save(fileStream, ImageFormat.Jpeg);
+            }
+        }
+
+        private static string CreateName(Guid id) => id.ToString("D");
+
+        private static string CreateThumbnailName(Guid id) => $"{CreateName(id)}-thumb";
     }
 }

@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using ImageUploader.Application.Contract;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ImageUploader.Controllers
@@ -9,66 +11,99 @@ namespace ImageUploader.Controllers
     [ApiController]
     public class ImagesController : ControllerBase
     {
-        private readonly IImageUploader _uploader;
+        private readonly IImagesService _service;
 
-        public ImagesController(IImageUploader uploader)
+        public ImagesController(IImagesService service)
         {
-            _uploader = uploader ?? throw new ArgumentNullException(nameof(uploader));
+            _service = service ?? throw new ArgumentNullException(nameof(service));
+        }
+
+        [HttpGet("{id}")]
+        public IActionResult Get(Guid id)
+        {
+            var image = _service.Get(id);
+            return Ok(image);
+        }
+
+        [HttpGet("{id}/thumbnail")]
+        public IActionResult GetThumbnail(Guid id)
+        {
+            var image = _service.GetThumbnail(id);
+            return Ok(image);
         }
 
         [HttpPost]
-        public async Task<ActionResult> Post([FromBody]UploadRequest request)
+        public async Task<IActionResult> Post([FromBody]UploadRequest request)
         {
-            try
-            {
-                switch (request.UploadType)
-                {
-                    case UploadType.ByBase64s:
-                        var images = request.Base64Images ?? throw new ArgumentNullException(nameof(request.Base64Images));
-                        await _uploader.UploadByBase64(images);
-                        break;
+            if (request is null) return BadRequest();
 
-                    default:
-                        throw new NotImplementedException();
-                }
-
-                return Ok();
-            }
-            catch (Exception ex)
+            var ids = new Guid[0];
+            switch (request.UploadType)
             {
-                Console.WriteLine(ex.Message);
-                return StatusCode(500);
+                case UploadType.Base64:
+                    var images = request.Base64Images;
+                    if (images is null) return BadRequest();
+                    ids = UploadByEncodedImages(images);
+                    break;
+
+                case UploadType.Url:
+                    var urls = request.Urls;
+                    if (urls is null) return BadRequest();
+                    ids = await UploadByUrls(urls);
+                    break;
+
+                default:
+                    throw new NotImplementedException();
             }
+
+            return Ok(ids);
         }
 
-        //[HttpPost]
-        //public async Task<IActionResult> Post(List<IFormFile> files)
-        //{
-        //    long size = files.Sum(f => f.Length);
-        //
-        //    // full path to file in temp location
-        //    var filePath = Path.GetTempFileName();
-        //
-        //    foreach (var formFile in files)
-        //    {
-        //        if (formFile.Length > 0)
-        //        {
-        //            using (var stream = new FileStream(filePath, FileMode.Create))
-        //            {
-        //                await formFile.CopyToAsync(stream);
-        //            }
-        //        }
-        //    }
-        //
-        //    // process uploaded files
-        //    // Don't rely on or trust the FileName property without validation.
-        //
-        //    return Ok(new { count = files.Count, size, filePath });
-        //}
+        private async Task<Guid[]> UploadByUrls(IEnumerable<string> urls)
+        {
+            var ids = new List<Guid>();
+            foreach (var url in urls)
+            {
+                var id = await _service.UploadFrom(url);
+                ids.Add(id);
+            }
+            return ids.ToArray();
+        }
+
+        private Guid[] UploadByEncodedImages(IEnumerable<string> encodedImages)
+        {
+            var ids = new List<Guid>();
+            foreach (var base64 in encodedImages)
+            {
+                var id = _service.Upload(base64);
+                ids.Add(id);
+            }
+            return ids.ToArray();
+        }
+
+        [HttpPost("content")]
+        public IActionResult Post([FromForm]IEnumerable<IFormFile> files)
+        {
+            if (files is null) return BadRequest();
+
+            var ids = new List<Guid>();
+            foreach (var formFile in files)
+            {
+                using (var stream = formFile.OpenReadStream())
+                {
+                    var id = _service.Upload(stream);
+                    ids.Add(id);
+                }
+            }
+
+            return Ok(ids);
+        }
     }
+
     public enum UploadType
     {
-        ByBase64s
+        Base64,
+        Url
     }
 
     public class UploadRequest

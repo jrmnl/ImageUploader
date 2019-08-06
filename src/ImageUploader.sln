@@ -7,10 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageUploader.Application.C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageUploader.Application", "ImageUploader.Application\ImageUploader.Application.csproj", "{4F9C63C4-2832-4F1C-A188-CCBDD16525D6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageUploader.Persistence", "ImageUploader.Persistence\ImageUploader.Persistence.csproj", "{47749BA6-145A-45F4-993D-763BAA2B0398}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageUploader.Persistence.Contract", "ImageUploader.Persistence.Contract\ImageUploader.Persistence.Contract.csproj", "{190DE95C-95F9-4BFB-BBFD-FDA8111F53DD}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageUploader.Controllers", "ImageUploader.Controllers\ImageUploader.Controllers.csproj", "{37B6D1B9-6072-4454-9752-9C35052AA13F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageUploader.Host", "ImageUploader.Host\ImageUploader.Host.csproj", "{D8B68C1E-A7AD-41C8-9CE5-9BD432948C86}"
@@ -29,14 +25,6 @@ Global
 		{4F9C63C4-2832-4F1C-A188-CCBDD16525D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4F9C63C4-2832-4F1C-A188-CCBDD16525D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4F9C63C4-2832-4F1C-A188-CCBDD16525D6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{47749BA6-145A-45F4-993D-763BAA2B0398}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{47749BA6-145A-45F4-993D-763BAA2B0398}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{47749BA6-145A-45F4-993D-763BAA2B0398}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{47749BA6-145A-45F4-993D-763BAA2B0398}.Release|Any CPU.Build.0 = Release|Any CPU
-		{190DE95C-95F9-4BFB-BBFD-FDA8111F53DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{190DE95C-95F9-4BFB-BBFD-FDA8111F53DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{190DE95C-95F9-4BFB-BBFD-FDA8111F53DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{190DE95C-95F9-4BFB-BBFD-FDA8111F53DD}.Release|Any CPU.Build.0 = Release|Any CPU
 		{37B6D1B9-6072-4454-9752-9C35052AA13F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{37B6D1B9-6072-4454-9752-9C35052AA13F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{37B6D1B9-6072-4454-9752-9C35052AA13F}.Release|Any CPU.ActiveCfg = Release|Any CPU
