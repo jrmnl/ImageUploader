@@ -71,7 +71,6 @@ namespace ImageUploader.Controllers
             var ids = new List<Guid>();
             for (int i = 0; i < images.Count; i++)
             {
-                var a = images[i].ContentType;
                 using (var stream = images[i].OpenReadStream())
                 {
                     try
@@ -94,31 +93,22 @@ namespace ImageUploader.Controllers
             var ids = new List<Guid>();
             for (int i = 0; i < urls.Count; i++)
             {
+                var url = urls[i];
                 try
                 {
-                    var id = await _service.UploadFrom(urls[i]);
+                    var id = await _service.UploadFrom(url);
                     ids.Add(id);
                 }
                 catch (InvalidImageException)
                 {
-                    return InvalidImageType(i, urls[i]);
+                    return InvalidImageType(i, url);
                 }
                 catch (ResourceNotFoundException)
                 {
-                    return UnprocessableEntity($"Item #{i} '{urls[i]}': resource not found");
+                    return UnprocessableEntity($"Item #{i} '{url}': resource not found");
                 }
             }
             return Ok(ids);
-        }
-
-        private IActionResult InvalidImageType(int itemIndex)
-        {
-            return UnprocessableEntity($"Item #{itemIndex}: invalid image type");
-        }
-
-        private IActionResult InvalidImageType(int itemIndex, string url)
-        {
-            return UnprocessableEntity($"Item #{itemIndex} - '{url}': invalid image type");
         }
 
         private IActionResult UploadByEncodedImages(IReadOnlyList<string> encodedImages)
@@ -137,6 +127,16 @@ namespace ImageUploader.Controllers
                 }
             }
             return Ok(ids);
+        }
+
+        private IActionResult InvalidImageType(int itemIndex)
+        {
+            return UnprocessableEntity($"Item #{itemIndex}: invalid image type");
+        }
+
+        private IActionResult InvalidImageType(int itemIndex, string url)
+        {
+            return UnprocessableEntity($"Item #{itemIndex} - '{url}': invalid image type");
         }
 
         public enum ImageUploadType
