@@ -19,6 +19,5 @@ Service for uploading images. Development in prgoress
 - CI интеграция (Travis CI, Circle CI, другие).
 
 # Documentation
-RAML - https://github.com/jrmnl/ImageUploader/blob/master/api-contract/api.raml
-
-Postman Examples - https://documenter.getpostman.com/view/1302271/SVYrse28
+- RAML - https://github.com/jrmnl/ImageUploader/blob/master/api-contract/api.raml
+- Postman Examples - https://documenter.getpostman.com/view/1302271/SVYrse28
