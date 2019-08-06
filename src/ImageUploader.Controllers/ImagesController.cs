@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using ImageUploader.Application.Contract;
 using Microsoft.AspNetCore.Http;
@@ -33,83 +34,112 @@ namespace ImageUploader.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody]UploadRequest request)
+        public async Task<IActionResult> Post([FromBody]ImageUploadRequest request)
         {
-            if (request is null) return BadRequest();
+            if (request is null) return BadRequest("Body is missing");
 
-            var ids = new Guid[0];
-            switch (request.UploadType)
+            switch (request.Type)
             {
-                case UploadType.Base64:
-                    var images = request.Base64Images;
-                    if (images is null) return BadRequest();
-                    ids = UploadByEncodedImages(images);
-                    break;
+                case ImageUploadType.ByUrls:
+                    {
+                        if (request.Urls is null)
+                            return BadRequest("Urls are missing");
 
-                case UploadType.Url:
-                    var urls = request.Urls;
-                    if (urls is null) return BadRequest();
-                    ids = await UploadByUrls(urls);
-                    break;
+                        return await UploadByUrls(request.Urls);
+                    }
+
+                case ImageUploadType.ByBase64:
+                    {
+                        if (request.EncodedImages is null)
+                            return BadRequest("EncodedImages are missing");
+
+                        return UploadByEncodedImages(request.EncodedImages);
+                    }
 
                 default:
                     throw new NotImplementedException();
             }
-
-            return Ok(ids);
-        }
-
-        private async Task<Guid[]> UploadByUrls(IEnumerable<string> urls)
-        {
-            var ids = new List<Guid>();
-            foreach (var url in urls)
-            {
-                var id = await _service.UploadFrom(url);
-                ids.Add(id);
-            }
-            return ids.ToArray();
-        }
-
-        private Guid[] UploadByEncodedImages(IEnumerable<string> encodedImages)
-        {
-            var ids = new List<Guid>();
-            foreach (var base64 in encodedImages)
-            {
-                var id = _service.Upload(base64);
-                ids.Add(id);
-            }
-            return ids.ToArray();
         }
 
         [HttpPost("content")]
-        public IActionResult Post([FromForm]IEnumerable<IFormFile> files)
+        public IActionResult Post([FromForm]IReadOnlyList<IFormFile> files)
         {
             if (files is null) return BadRequest();
+            if (!files.All(file => file.ContentType == "image/jpeg"))
+                return BadRequest("Only 'image/jpeg' supported");
 
             var ids = new List<Guid>();
-            foreach (var formFile in files)
+            for (int i = 0; i < files.Count; i++)
             {
-                using (var stream = formFile.OpenReadStream())
+                var a = files[i].ContentType;
+                using (var stream = files[i].OpenReadStream())
                 {
-                    var id = _service.Upload(stream);
-                    ids.Add(id);
+                    try
+                    {
+                        var id = _service.Upload(stream);
+                        ids.Add(id);
+                    }
+                    catch (InvalidImageException)
+                    {
+                        return UnprocessableEntity($"Item #{i}: invalid image type");
+                    }
                 }
             }
 
             return Ok(ids);
         }
-    }
 
-    public enum UploadType
-    {
-        Base64,
-        Url
-    }
+        private async Task<IActionResult> UploadByUrls(IReadOnlyList<string> urls)
+        {
+            var ids = new List<Guid>();
+            for (int i = 0; i < urls.Count; i++)
+            {
+                try
+                {
+                    var id = await _service.UploadFrom(urls[i]);
+                    ids.Add(id);
+                }
+                catch (InvalidImageException)
+                {
+                    return UnprocessableEntity($"Item #{i} '{urls[i]}': invalid image type");
+                }
+                catch (ResourceNotFoundException)
+                {
+                    return UnprocessableEntity($"Item #{i} '{urls[i]}': resource not found");
+                }
+            }
+            return Ok(ids);
+        }
 
-    public class UploadRequest
-    {
-        public UploadType UploadType { get; set; }
-        public string[] Base64Images { get; set; }
-        public string[] Urls { get; set; }
+        private IActionResult UploadByEncodedImages(IReadOnlyList<string> encodedImages)
+        {
+            var ids = new List<Guid>();
+            for (int i = 0; i < encodedImages.Count; i++)
+            {
+                try
+                {
+                    var id = _service.Upload(encodedImages[i]);
+                    ids.Add(id);
+                }
+                catch (InvalidImageException)
+                {
+                    return UnprocessableEntity($"Item #{i}: invalid image type");
+                }
+            }
+            return Ok(ids);
+        }
+
+        public enum ImageUploadType
+        {
+            ByUrls,
+            ByBase64
+        }
+
+        public class ImageUploadRequest
+        {
+            public ImageUploadType Type { get; set; }
+            public string[] Urls { get; set; }
+            public string[] EncodedImages { get; set; }
+        }
     }
 }

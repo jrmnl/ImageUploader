@@ -48,7 +48,7 @@ namespace ImageUploader.Application
         {
             var id = Guid.NewGuid();
 
-            using (var image = Image.FromStream(stream))
+            using (var image = CreateImage(stream))
             {
                 var name = CreateName(id);
                 Save(name, image);
@@ -63,15 +63,44 @@ namespace ImageUploader.Application
             return id;
         }
 
-        public async Task<Guid> UploadFrom(string uri)
+        private Image CreateImage(Stream stream)
         {
-            using (var streamImage = await _client.GetStreamAsync(uri))
+            try
             {
-                return Upload(streamImage);
+                return Image.FromStream(stream);
+            }
+            catch (ArgumentException)
+            {
+                throw new InvalidImageException();
             }
         }
 
-        private Stream OpenRead(string name) => File.OpenRead(Path.Combine(_path, name));
+        public async Task<Guid> UploadFrom(string url)
+        {
+            try
+            {
+                using (var streamImage = await _client.GetStreamAsync(url))
+                {
+                    return Upload(streamImage);
+                }
+            }
+            catch (HttpRequestException)
+            {
+                throw new ResourceNotFoundException();
+            }
+        }
+
+        private Stream OpenRead(string name)
+        {
+            try
+            {
+                return File.OpenRead(Path.Combine(_path, name));
+            }
+            catch (FileNotFoundException)
+            {
+                throw new ImageNotFoundException();
+            }
+        }
 
         private void Save(string name, Image image)
         {
