@@ -4,14 +4,14 @@ WORKDIR /app
 EXPOSE 80
 
 FROM mcr.microsoft.com/dotnet/core/sdk:2.2-stretch AS build
-WORKDIR /src
-COPY ImageUploader.sln ./
-COPY ImageUploader.Application.Contract/*.csproj ./ImageUploader.Application.Contract/
-COPY ImageUploader.Application/*.csproj ./ImageUploader.Application/
-COPY ImageUploader.Controllers/*.csproj ./ImageUploader.Controllers/
-COPY ImageUploader.Host/*.csproj ./ImageUploader.Host/
+WORKDIR /build
+COPY src/ImageUploader.sln ./
+COPY src/ImageUploader.Application.Contract/*.csproj ./ImageUploader.Application.Contract/
+COPY src/ImageUploader.Application/*.csproj ./ImageUploader.Application/
+COPY src/ImageUploader.Controllers/*.csproj ./ImageUploader.Controllers/
+COPY src/ImageUploader.Host/*.csproj ./ImageUploader.Host/
 RUN dotnet restore
-COPY . ./
+COPY src/. ./
 RUN dotnet build "ImageUploader.Host/ImageUploader.Host.csproj" -c Release -o /app
 
 FROM build AS publish
