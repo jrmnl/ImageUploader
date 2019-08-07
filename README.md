@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/jrmnl/ImageUploader.svg?branch=master)](https://travis-ci.org/jrmnl/ImageUploader)
+
 # ImageUploader
 Service for uploading images. Development in prgoress
 
