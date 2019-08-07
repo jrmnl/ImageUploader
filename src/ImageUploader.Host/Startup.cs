@@ -1,10 +1,10 @@
-﻿using ImageUploader.Application.Contract;
+﻿using System.Net.Http;
+using ImageUploader.Application.Contract;
 using ImageUploader.Application;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System.Net.Http;
 using ImageUploader.Controllers;
 
 namespace ImageUploader
@@ -25,7 +25,7 @@ namespace ImageUploader
                 .AddHttpClient()
                 .AddScoped<IImagesService>(c =>
                     new ImagesService(
-                        path: Configuration.GetValue<string>("FilestoragePath"),
+                        path: Configuration.GetValue<string>("FILE_PATH"),
                         client: c.GetRequiredService<IHttpClientFactory>().CreateClient()));
         }
 

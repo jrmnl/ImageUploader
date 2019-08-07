@@ -1,4 +1,5 @@
 FROM mcr.microsoft.com/dotnet/core/aspnet:2.2-stretch-slim AS base
+RUN apt-get update && apt-get install -y apt-utils libgdiplus libc6-dev
 WORKDIR /app
 EXPOSE 80
 
@@ -19,4 +20,4 @@ RUN dotnet publish "ImageUploader.Host/ImageUploader.Host.csproj" -c Release -o 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app .
-ENTRYPOINT ["dotnet", "ImageUploader.Host/ImageUploader.Host.dll"]
+ENTRYPOINT ["dotnet", "ImageUploader.Host.dll"]
