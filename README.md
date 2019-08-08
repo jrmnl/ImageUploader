@@ -23,3 +23,6 @@ Service for uploading images. Development in prgoress
 # Documentation
 - RAML - https://github.com/jrmnl/ImageUploader/blob/master/api-contract/api.raml
 - Postman Examples - https://documenter.getpostman.com/view/1302271/SVYrse28
+
+# How to run
+docker-compose up
