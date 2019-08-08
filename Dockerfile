@@ -14,6 +14,8 @@ COPY src/ImageUploader.IntegrationTests/*.csproj ./ImageUploader.IntegrationTest
 RUN dotnet restore
 COPY src/. ./
 RUN dotnet build "ImageUploader.Host/ImageUploader.Host.csproj" -c Release -o /app
+
+FROM base AS test
 RUN dotnet test "ImageUploader.IntegrationTests/ImageUploader.IntegrationTests.csproj" -c Release
 
 FROM build AS publish
