@@ -15,7 +15,8 @@ RUN dotnet restore
 COPY src/. ./
 RUN dotnet build "ImageUploader.Host/ImageUploader.Host.csproj" -c Release -o /app
 
-FROM base AS test
+FROM build AS test
+RUN apt-get update && apt-get install -y apt-utils libgdiplus libc6-dev
 RUN dotnet test "ImageUploader.IntegrationTests/ImageUploader.IntegrationTests.csproj" -c Release
 
 FROM build AS publish
