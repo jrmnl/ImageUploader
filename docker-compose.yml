@@ -11,4 +11,4 @@ services:
             FILE_PATH: "/images"
             ASPNETCORE_ENVIRONMENT: "Production"
         volumes:
-            - ~/Downloads/qwerty:/images
+            - /images

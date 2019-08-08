@@ -10,14 +10,16 @@ COPY src/ImageUploader.Application.Contract/*.csproj ./ImageUploader.Application
 COPY src/ImageUploader.Application/*.csproj ./ImageUploader.Application/
 COPY src/ImageUploader.Controllers/*.csproj ./ImageUploader.Controllers/
 COPY src/ImageUploader.Host/*.csproj ./ImageUploader.Host/
+COPY src/ImageUploader.IntegrationTests/*.csproj ./ImageUploader.IntegrationTests/
 RUN dotnet restore
 COPY src/. ./
 RUN dotnet build "ImageUploader.Host/ImageUploader.Host.csproj" -c Release -o /app
+RUN dotnet test "ImageUploader.IntegrationTests/ImageUploader.IntegrationTests.csproj" -c Release
 
 FROM build AS publish
 RUN dotnet publish "ImageUploader.Host/ImageUploader.Host.csproj" -c Release -o /app
 
-FROM base AS final
+FROM base AS runtime
 WORKDIR /app
 COPY --from=publish /app .
 ENTRYPOINT ["dotnet", "ImageUploader.Host.dll"]
