@@ -1,13 +1,10 @@
+language: csharp
+
 services:
   - docker
 
 env:
-  COMPOSE_VERSION: 3
-
-before_install:
- - curl -L https://github.com/docker/compose/releases/download/${COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
- - chmod +x docker-compose
- - sudo mv docker-compose /usr/local/bin
+  - COMPOSE_FILE=docker-compose.yml
 
 script:
   - docker-compose build
